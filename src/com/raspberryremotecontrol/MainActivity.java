@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         new Info(R.drawable.distribution, "Distribution", "", -1),
         new Info(R.drawable.kernel, "Kernel", "", -1),
         new Info(R.drawable.firmware, "Firmware", "", -1),
-        new Info(R.drawable.cpuheat, "Cpu Heat", "", -1),
+        new Info(R.drawable.cpuheat, "Cpu Temperature", "", -1),
         new Info(R.drawable.uptime, "Uptime", "", -1),
         new Info(R.drawable.ram, "Ram Info", "", -1),
         new Info(R.drawable.cpu, "Cpu", "", -1),
@@ -82,8 +82,8 @@ public class MainActivity extends Activity {
 
         prefs.edit().putString("profiles", profiles).commit();
     }
+ 
     int lastChecked = 0;
-
     private void SelectProfile() {
         runOnUiThread(new Runnable() {
             @Override
@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
                 lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
                 lv.setItemChecked(0, true);
+                lastChecked = 0;
 
                 lv.setOnItemClickListener(new OnItemClickListener() {
                     boolean somethingChecked = false;
@@ -500,6 +501,7 @@ public class MainActivity extends Activity {
                     Properties config = new Properties();
                     config.put("StrictHostKeyChecking", "no");
                     session.setConfig(config);
+                    session.setTimeout(4000);	// set session connect timeout to 4 seconds
                     session.connect();
 
                     StartUpdateLoop();

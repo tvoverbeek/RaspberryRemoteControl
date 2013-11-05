@@ -238,7 +238,6 @@ public class MainActivity extends Activity {
                     }
                 });
 
-
                 final AlertDialog Dialog = builder.create();
 
                 Dialog.setView(dialog_layout);
@@ -304,7 +303,8 @@ public class MainActivity extends Activity {
 
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Profiles.add(new Profile(ProfileName.getText().toString(), IpAddress.getText().toString(), username.getText().toString(), password.getText().toString()));
+                        Profiles.add(new Profile(ProfileName.getText().toString(), IpAddress.getText().toString(),
+                        		                 username.getText().toString(), password.getText().toString()));
 
                         SaveProfiles();
 
@@ -354,8 +354,7 @@ public class MainActivity extends Activity {
                 DecimalFormat df;
                 try {
                     while (isOnline() && session.isConnected()) {
-                        while (!paused) {
-
+                        if (!paused) {
                             try {
                                 if (infos[0].Description.equals("")) {
                                     String hostname = ExecuteCommand("hostname -f");
@@ -380,7 +379,7 @@ public class MainActivity extends Activity {
 
                                 if (!cputemp_str.isEmpty()) {
                                     String cputemp = df.format(Float
-                                            .parseFloat(cputemp_str) / 1000) + "'C";
+                                            .parseFloat(cputemp_str) / 1000) + " 糃";
                                     infos[4].Description = cputemp;
                                 } else {
                                     infos[4].Description = "* not available *";
@@ -405,7 +404,7 @@ public class MainActivity extends Activity {
                                 Integer MemUsed = Used - Buffers - Cached;
                                 Integer Percentage = Integer.parseInt(df.format((float) ((float) MemUsed / (float) MemTot) * 100.0f));
 
-                                infos[6].Description = "Used: " + MemUsed + "Mb\nFree: " + fMemFree + "Mb\nTot: " + MemTot + "Mb";
+                                infos[6].Description = "Used: " + MemUsed + " MB\nFree: " + fMemFree + " MB\nTot: " + MemTot + " MB";
                                 infos[6].ProgressBarProgress = Percentage;
 
                                 df = new DecimalFormat("0.0");
@@ -416,24 +415,24 @@ public class MainActivity extends Activity {
                                 String cpuCurFreq = "*N/A*";
                                 if (!cpuCurFreq_cmd.isEmpty()) {
                                     cpuCurFreq = df.format(Float
-                                            .parseFloat(cpuCurFreq_cmd) / 1000) + "Mhz";
+                                            .parseFloat(cpuCurFreq_cmd) / 1000) + " MHz";
                                 }
                                 String cpuMinFreq_cmd = ExecuteCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
 
                                 String cpuMinFreq = "*N/A*";
                                 if (!cpuMinFreq_cmd.isEmpty()) {
                                     cpuMinFreq = df.format(Float
-                                            .parseFloat(cpuMinFreq_cmd) / 1000) + "Mhz";
+                                            .parseFloat(cpuMinFreq_cmd) / 1000) + " MHz";
                                 }
                                 String cpuMaxFreq_cmd = ExecuteCommand("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
 
                                 String cpuMaxFreq = "*N/A*";
                                 if (!cpuMaxFreq_cmd.isEmpty()) {
                                     cpuMaxFreq = df.format(Float
-                                            .parseFloat(cpuMaxFreq_cmd) / 1000) + "Mhz";
+                                            .parseFloat(cpuMaxFreq_cmd) / 1000) + " MHz";
                                 }
 
-                                infos[7].Description = "Loads\n" + loadavg[0] + " [1 min] 路 " + loadavg[1] + " [5 min] 路 " + loadavg[2] + " [15 min]\nRunning at " + cpuCurFreq + "\n(min: " + cpuMinFreq + " 路 max: " + cpuMaxFreq + ")";
+                                infos[7].Description = "Loads\n" + loadavg[0] + " [1 min],  " + loadavg[1] + " [5 min],  " + loadavg[2] + " [15 min]\nRunning at " + cpuCurFreq + "\n(min: " + cpuMinFreq + ",  max: " + cpuMaxFreq + ")";
 
                                 String Drives = ExecuteCommand("df -T | grep -vE \"tmpfs|rootfs|Filesystem|File system\"");
                                 lines = Drives.split(System.getProperty("line.separator"));
@@ -457,7 +456,7 @@ public class MainActivity extends Activity {
                                     String format = DriveInfos[1];
                                     totalSize += partSize;
                                     usedSize += partUsed;
-                                    infos[8].Description += name + "\n" + "Free: " + free + " 路 used: " + used + "\nTotal: " + total + " 路 format: " + format + ((i == (lines.length - 1)) ? "" : "\n\n");
+                                    infos[8].Description += name + "\n" + "Free: " + free + ",  Used: " + used + "\nTotal: " + total + ",  Format: " + format + ((i == (lines.length - 1)) ? "" : "\n\n");
                                 }
 
                                 Integer percentage = usedSize * 100 / totalSize;
@@ -474,6 +473,9 @@ public class MainActivity extends Activity {
                             } catch (Exception e) {
                                 ThrowException(e.getMessage());
                             }
+                        }
+                        else {
+                        	Thread.sleep(refreshrate);	// Avoid busy waiting
                         }
                     }
 
@@ -601,39 +603,37 @@ public class MainActivity extends Activity {
     }
 
     public void shutdown(View view) {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirm")
-                .setMessage("Are you sure you want to shutdown your Raspberry Pi?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ExecuteCommand("shutdown -h now");
-                DisconnectSSH();
-            }
-        })
-                .setNegativeButton("No", null)
-                .show();
-
+    	new AlertDialog.Builder(this)
+    	.setTitle("Confirm")
+    	.setMessage("Are you sure you want to shutdown your Raspberry Pi?")
+    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    		@Override
+    		public void onClick(DialogInterface dialog, int which) {
+    			ExecuteCommand("shutdown -h now");
+    			DisconnectSSH();
+    		}
+    	})
+    	.setNegativeButton("No", null)
+    	.show();
     }
 
     public void reboot(View view) {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirm")
-                .setMessage("Are you sure you want to reboot your Raspberry Pi?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ExecuteCommand("shutdown -r now");
-                DisconnectSSH();
-            }
-        })
-                .setNegativeButton("No", null)
-                .show();
-
+    	new AlertDialog.Builder(this)
+    	.setTitle("Confirm")
+    	.setMessage("Are you sure you want to reboot your Raspberry Pi?")
+    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    		@Override
+    		public void onClick(DialogInterface dialog, int which) {
+    			ExecuteCommand("shutdown -r now");
+    			DisconnectSSH();
+    		}
+    	})
+    	.setNegativeButton("No", null)
+    	.show();
     }
 
     public static String kConv(Integer kSize) {
-        char[] unit = {'K', 'M', 'G', 'T'};
+        String[] unit = {" KB", " MB", " GB", " TB"};
         Integer i = 0;
         Float fSize = (float) (kSize * 1.0);
         while (i < 3 && fSize > 1024) {

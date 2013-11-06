@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 final View dialog_layout = getLayoutInflater().inflate(R.layout.select_profile_dialog_layout, null);
                 final ListView lv = (ListView) dialog_layout.findViewById(R.id.profiles);
-                ArrayAdapter adapter1 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_single_choice, ProfilesName);
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_single_choice, ProfilesName);
                 lv.setAdapter(adapter1);
                 lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
                 lv.setOnItemClickListener(new OnItemClickListener() {
                     boolean somethingChecked = false;
 
-                    public void onItemClick(AdapterView arg0, View arg1, int arg2,
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                             long arg3) {
                         if (somethingChecked) {
                             ListView lv = (ListView) arg0;

@@ -5,12 +5,9 @@
 package com.raspberryremotecontrol;
 
 import android.app.Activity;
-import android.os.*;
 import android.view.*;
 import android.widget.*;
-import android.content.*;
 import android.content.Context;
-import android.graphics.drawable.*;
 
 /**
  *

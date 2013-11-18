@@ -11,5 +11,6 @@
  
       <item
         android:id="@+id/customcommand"        
-        android:title="Send custom command"/>   
+        android:title="Send custom command"
+        android:enabled="false"/>   
 </menu>

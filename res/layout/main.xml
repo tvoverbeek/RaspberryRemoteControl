@@ -5,17 +5,19 @@
                android:layout_height="match_parent" 
                android:orientation="vertical">
     
-    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
                    android:layout_width="fill_parent" 
                    android:layout_height="wrap_content" 
                    android:orientation="horizontal">   
         <Button           
             style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/shutdown"
             android:layout_width="match_parent" 
             android:layout_height="wrap_content"        
             android:layout_weight="1"
             android:text="Shutdown"
             android:onClick="shutdown"
+            android:enabled="false"
         />
         
         <View
@@ -25,11 +27,14 @@
     
         <Button             
             style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/reboot"
             android:layout_width="match_parent" 
             android:layout_height="wrap_content" 
             android:layout_weight="1"
             android:text="Reboot"
-            android:onClick="reboot"/>
+            android:onClick="reboot"
+            android:enabled="false"
+        />
     </LinearLayout>
         
     <View
